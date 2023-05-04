@@ -33,13 +33,12 @@ const Feed = () => {
           Copyright 2023 FjSTube Media
         </Typography>
       </Box>
-      <Box>
+      <Box p={2} sx={{ overflowY: "auto", height: "90vh", flex: 2 }}>
         <Typography
-          sx={{ overflowY: "auto", height: "90vh", flex: 2, color: "white" }}
-          p={2}
           variant="h4"
           fontWeight="bold"
           mb={2}
+          sx={{ color: "white" }}
         >
           {selected} <span style={{ color: "#F31503" }}>Videos</span>
         </Typography>
