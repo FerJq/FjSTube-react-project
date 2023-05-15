@@ -4,26 +4,32 @@ import ReactPlayer from "react-player";
 import { Typography, Box, Stack } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
-import { Videos, Loader } from "./";
+import { Videos } from "./";
 import { fetchFromAPI } from "../utils/fetchFromAPI";
-import { CheckCircle } from "@mui/icons-material";
 
 const VideoDetail = () => {
   const { id } = useParams();
+
   const [videoData, setVideoData] = useState(null);
+  const [videos, setVideos] = useState(null);
   console.log(videoData);
 
   useEffect(() => {
     fetchFromAPI(`videos?part=snippet,statistics&id=${id}`).then((data) =>
       setVideoData(data.items[0])
     );
+
+    fetchFromAPI(`search?part=snippet&relatedToVideoId=${id}&type=video`).then(
+      (data) => setVideos(data.items)
+    );
   }, [id]);
 
+  if (!videoData?.snippet) return "Loading";
   const {
     snippet: { title, channelId, channelTitle },
     statistics: { viewCount, likeCount },
   } = videoData;
-  if (!videoData?.snippet) return "Loading...";
+
   return (
     <Box minHeight="95vh">
       <Stack direction={{ xs: "column", md: "row" }}>
@@ -50,7 +56,7 @@ const VideoDetail = () => {
                   color="#fff"
                 >
                   {channelTitle}{" "}
-                  <CheckCircle
+                  <CheckCircleIcon
                     sx={{ fontSize: "12px", color: "grey", ml: "5px" }}
                   />{" "}
                 </Typography>
@@ -65,6 +71,14 @@ const VideoDetail = () => {
               </Stack>
             </Stack>
           </Box>
+        </Box>
+        <Box
+          px={2}
+          py={{ md: 1, xs: 5 }}
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Videos videos={videos} direction="column" />
         </Box>
       </Stack>
     </Box>
